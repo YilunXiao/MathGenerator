@@ -1,24 +1,16 @@
+package mathGenerator;
 
 public class EquationParse {
 	
-	private static int answer;
-	private static String operator = "+";
-	private static String delims = "[ ]+";
+	private String delims = "[ ]+";
 	
-	
-	public static void main(String[] args) {
+	public String solveEqu(String equation) {
 		
-		String equation = "2 - 5 = ";
-		System.out.printf(equation + "%d", solveEqu(equation));
-		
-	}
-	
-	public static int solveEqu(String equation) {
-		answer = 0;
+		int answer = 0;
+		String operator = "+";
 		String[] tokens = equation.split(delims);
 		
 		for (int i=0; i<tokens.length; i++) {
-			
 			if (isNumeric(tokens[i])) {
 				switch (operator) {
 				case "+": answer = answer + Integer.parseInt(tokens[i]);
@@ -30,27 +22,27 @@ public class EquationParse {
 				default: break;
 				}
 			}
-			else operator = tokens[i];
+			else if (tokens[i].equals("+") || tokens[i].equals("-") || tokens[i].equals("*")) {
+				operator = tokens[i];
+			}
+			
 		}
 		
-		return answer;
+		String answerText = "" + answer;
+		return answerText;
 	}
 	
-	public static boolean isNumeric(String strNum) {
+	private boolean isNumeric(String strNum) {
 	    if (strNum == null) {
 	        return false;
 	    }
 	    try {
-	        double d = Double.parseDouble(strNum);
+	        double d = Integer.parseInt(strNum);
 	    } catch (NumberFormatException nfe) {
 	        return false;
 	    }
 	    return true;
 	}
-	
-	
-	
-	
 	
 	
 }

@@ -6,39 +6,63 @@ import java.awt.event.*;
 
 public class GUI implements ActionListener {
 	
+	private int numQuest = 14;
+	private StringGen equation = new StringGen();
+	private EquationParse parser = new EquationParse();
 	private JFrame frame;
 	private JPanel panel;
-	private JTextField textfield;
-	private JButton checkAnswer;
-	private Font myFont = new Font("Arial", Font.BOLD, 30);
+	private JTextField[] textfieldArray = new JTextField[numQuest];
+	private JButton opAdd, opSub, opMul, opDiv;
+	private JButton checkAnswer, reset;
+	private Font myFont = new Font("Arial", Font.BOLD, 15);
+	private JLabel[] labelArray = new JLabel[numQuest];
 	
 	//Constructor
 	public GUI() {
 		frame = new JFrame("Math Generator");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(420, 550);
+		frame.setSize(420, 600);
 		frame.setLayout(null);
 		
 		panel = new JPanel();
-		panel.setBounds(50, 100, 300, 300);
-		panel.setLayout(new GridLayout(8, 4, 10, 10));
+		panel.setBounds(50, 50, 300, 500);
+		panel.setLayout(new GridLayout(10, 4, 10, 10));
 		//panel.setBackground(Color.gray);
 		
-		//Test Layout Position
-		int numQuest = 14;
-		StringGen equation = new StringGen();
-		JButton button = new JButton("Button");
-		JTextField[] textfieldArray = new JTextField[numQuest];
-		JLabel[] labelArray = new JLabel[numQuest];
+		//Set Layout Position
+		//BUTTONS
+		checkAnswer = new JButton("check");
+		reset = new JButton("reset");
+		opAdd = new JButton("+");
+		opSub = new JButton("-");
+		opMul = new JButton("*");
+		opDiv = new JButton("/");
+		checkAnswer.addActionListener(this);
+		reset.addActionListener(this);
+		opAdd.addActionListener(this);
+		opSub.addActionListener(this);
+		opMul.addActionListener(this);
+		checkAnswer.setBounds(50, 460, 145, 50);
+		reset.setBounds(205, 460, 145, 50);
+		//BUTTON and TEXT POSITION
 		for (int i=0; i<numQuest; i++) {
-			labelArray[i] = new JLabel(equation.genEquation());
+			labelArray[i] = new JLabel(equation.genEquation(), 0);
 			textfieldArray[i] = new JTextField();
-		}
-        for (int i=0; i<labelArray.length; i++) {
+			
+			labelArray[i].setFont(myFont);
+			
+			labelArray[i].setOpaque(true);
+			
 			panel.add(labelArray[i]);
 			panel.add(textfieldArray[i]);
 		}
-        panel.add(button);
+		panel.add(opAdd);
+		panel.add(opSub);
+		panel.add(opMul);
+		panel.add(opDiv);
+        
+		frame.add(checkAnswer);
+        frame.add(reset);
 		
 		frame.add(panel);
 		//frame.add(checkButton);
@@ -48,8 +72,54 @@ public class GUI implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		
+		if (e.getSource() == checkAnswer) {
+			String answer, equ;
+			for (int i=0; i<numQuest; i++) {
+				equ = labelArray[i].getText();
+				answer = textfieldArray[i].getText();
+				if (answer.equals(parser.solveEqu(equ))) {
+					labelArray[i].setBackground(Color.green);
+					
+				}
+				else {
+					labelArray[i].setBackground(Color.red);
+					//textfieldArray[i].setText(parser.solveEqu(equ));
+				}
+			}
+			
+			//textfield.setText(textfield.getText().concat(String.valueOf(i)));
+		}
+		
+		if (e.getSource() == reset) {
+			reset();
+		}
+		
+		if (e.getSource() == opAdd) {
+			equation.setOp("+");
+			reset();
+		}
+		if (e.getSource() == opSub) {
+			equation.setOp("-");
+			reset();
+		}
+		if (e.getSource() == opMul) {
+			equation.setOp("*");
+			reset();
+		}
+		/*
+		if (e.getSource() == opDiv) {
+			//Not sure how to impliment division yet
+		}
+		*/
+	}
+	
+	public void reset() {
+		for (int i=0; i<numQuest; i++) {
+			labelArray[i].setText(equation.genEquation());
+			labelArray[i].setBackground(null);
+			textfieldArray[i].setText("");
+		}
 	}
 	
 
